@@ -1,0 +1,13 @@
+# Archivos auxiliares personales (no forman parte de la entrega del TP)
+_personal/
+
+# Secretos y entorno
+.env
+.env.*
+*.key
+*.pem
+
+# Dependencias y build
+node_modules/
+dist/
+build/
