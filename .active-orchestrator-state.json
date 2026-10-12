@@ -1,0 +1,46 @@
+{
+  "version": 4,
+  "step": "kb",
+  "owner": "active-orchestrator",
+  "discovery": {
+    "created_by": "discovery-research",
+    "sources": [
+      "https://www.getdentalink.com/",
+      "https://www.alegra.com/dental/",
+      "https://www.agendapro.com/",
+      "https://www.doctoralia.com.ar/",
+      "https://turnosapp.com.ar/"
+    ],
+    "competitors": [
+      { "name": "Dentalink", "notes_file": "docs/discovery/informe-discovery.md" },
+      { "name": "Alegra Dental", "notes_file": "docs/discovery/informe-discovery.md" },
+      { "name": "AgendaPro", "notes_file": "docs/discovery/informe-discovery.md" }
+    ],
+    "problema": "Ausentismo elevado en consultorios odontológicos y complejidad en la gestión de agenda multi-sillón y cobro de señas.",
+    "usuarios": ["Odontólogos independientes", "Directores de clínicas", "Secretarias / Recepcionistas", "Pacientes"],
+    "casos_de_uso": [
+      "Crear un turno evitando solapamientos por profesional y sillón/box",
+      "Enviar recordatorios automáticos por WhatsApp",
+      "Cobrar seña online para confirmar la cita"
+    ],
+    "funcionalidades_necesarias": [
+      "Agenda multi-profesional y multi-sillón",
+      "Gestión de pacientes e historia clínica básica",
+      "Recordatorios automáticos",
+      "Control de caja básico"
+    ],
+    "funcionalidades_opcionales": [
+      "Odontograma interactivo avanzado",
+      "Facturación electrónica AFIP",
+      "Portal del paciente autogestionable"
+    ],
+    "reglas_de_negocio": [
+      "Un turno no puede solaparse en el mismo box/sillón ni con el mismo profesional en el mismo horario",
+      "Las cancelaciones con menos de 24 horas retienen la seña"
+    ],
+    "integraciones": ["WhatsApp Business API", "Mercado Pago", "Google Calendar"],
+    "restricciones": ["Prohibido almacenar datos reales de pacientes de personas físicas en ejemplos y repositorios (datos 100% ficticios)"],
+    "riesgos": ["Baja adopción por parte de personal no habituado a la tecnología"],
+    "preguntas_abiertas": ["¿Cómo manejar las obras sociales y prepagas complejas en la primera versión?"]
+  }
+}
