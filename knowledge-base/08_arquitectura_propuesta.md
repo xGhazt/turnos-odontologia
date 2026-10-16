@@ -1,22 +1,31 @@
 # 08 — Arquitectura Propuesta
 
 ## Patrones de Diseño
-- **Arquitectura en Capas:** Separación entre presentación, servicios de negocio y acceso a datos.
-- **Transacciones Atómicas (ACID):** Uso de transacciones en base de datos para evitar doble reserva de turnos (Race Conditions).
-- **Webhooks Asíncronos:** Recepción de notificaciones de pago desacopladas del flujo principal de reserva.
+- **Arquitectura en Capas:** Separación entre presentación, servicios de negocio y acceso a datos (routers → services → repositories → models).
+- **Inyección de Dependencias:** Uso de `Depends` de FastAPI para sesiones de base de datos y autenticación.
+- **Transacciones Atómicas (ACID):** Uso de transacciones en PostgreSQL para evitar doble reserva de turnos (Race Conditions).
+- **Tareas Asíncronas / Webhooks:** Recepción de notificaciones de pago desacopladas del flujo principal, apoyadas en Redis para colas y procesamiento en segundo plano.
+- **Contenedores:** Servicios orquestados con Docker Compose (backend, frontend, PostgreSQL, Redis).
 
 ## Estructura de Directorios Propuesta
 ```text
 turnos-odontologia/
-├── client/                 # Frontend React (SPA)
+├── backend/                # Backend API (Python / FastAPI)
+│   ├── app/
+│   │   ├── api/            # Routers (endpoints REST)
+│   │   ├── core/           # Configuración, seguridad (JWT), dependencias
+│   │   ├── models/         # Modelos SQLAlchemy (ORM)
+│   │   ├── schemas/        # Esquemas Pydantic (validación I/O)
+│   │   ├── services/       # Lógica de negocio
+│   │   ├── repositories/   # Acceso a datos
+│   │   └── main.py         # Punto de entrada FastAPI
+│   ├── alembic/            # Migraciones de base de datos
+│   └── tests/
+├── frontend/               # Frontend React + TypeScript (Vite)
 │   ├── src/components/
 │   ├── src/views/
-│   └── src/services/
-├── server/                 # Backend API
-│   ├── src/controllers/
-│   ├── src/models/
-│   ├── src/routes/
-│   └── src/services/
+│   └── src/services/       # Cliente HTTP / consumo de API
+├── docker-compose.yml      # Orquestación (backend, frontend, PostgreSQL, Redis)
 ├── knowledge-base/         # Base de conocimiento oficial
 ├── docs/                   # Documentación y Discovery
 └── openspec/               # Especificaciones OpenSpec
@@ -26,7 +35,8 @@ turnos-odontologia/
 - Autenticación basada en JSON Web Tokens (JWT) con expiración y roles.
 - Variables sensibles configuradas mediante archivo `.env` (nunca hardcodeadas):
   - `DATABASE_URL`
+  - `REDIS_URL`
   - `JWT_SECRET`
   - `MERCADOPAGO_ACCESS_TOKEN`
   - `WHATSAPP_API_TOKEN`
-- Protección contra SQL Injection y XSS mediante validación de esquemas (Zod / Joi) y consultas parametrizadas.
+- Protección contra SQL Injection y XSS mediante validación de esquemas (Pydantic) y consultas parametrizadas (SQLAlchemy).
