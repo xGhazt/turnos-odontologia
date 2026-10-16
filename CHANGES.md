@@ -105,13 +105,12 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 
 ### [C-01] `foundation-setup`
 - **Estado**: `[x]` completado (2026-10-16)
-- **Scope**: Scaffolding completo del monorepo e infraestructura base con Docker Compose
-  - Estructura de directorios: `backend/`, `frontend/`, `docs/`, `knowledge-base/`
-  - `backend/`: aplicación base FastAPI con endpoint `/api/health`, Pydantic Settings para `.env`, logging estructurado, configuración CORS para Vite y setup inicial de Alembic
-  - `frontend/`: aplicación React con TypeScript y Vite, Tailwind CSS configurado, React Router v6, cliente HTTP base (Axios/Fetch) con interceptor de errores
-  - `docker-compose.yml`: servicios orquestados para `backend` (FastAPI), `frontend` (Vite dev), `db` (PostgreSQL 16) y `redis` (Redis 7) con healthchecks y volumen persistente
-  - Archivos `.env.example` en raíz, `backend/` y `frontend/`
-  - Tests: test unitario de healthcheck en FastAPI (`GET /api/health` → `{"status": "ok"}`), script de verificación de conexión a DB y Redis
+- **Scope**: Scaffolding del backend e infraestructura base con Docker Compose (recorte backend-only de C-01; el frontend se difiere a un change posterior)
+  - Estructura de directorios: `backend/`, `docs/`, `knowledge-base/` (el `frontend/` se crea en un change posterior)
+  - `backend/`: aplicación base FastAPI con `GET /api/health` (liveness) y `GET /api/health/ready` (readiness 200/503 según Postgres y Redis), Pydantic Settings fail-fast para `.env`, logging estructurado, configuración CORS para el origen de Vite y setup inicial de Alembic (async)
+  - `docker-compose.yml`: servicios `backend` (FastAPI), `db` (PostgreSQL 16) y `redis` (Redis 7) con healthchecks y volumen persistente (sin servicio `frontend` en este change)
+  - Archivos `.env.example` en la raíz y en `backend/` (sin `frontend/`, diferido)
+  - Tests: liveness, readiness OK/degradada (503), Settings fail-fast (falta `DATABASE_URL`, tipo inválido) y CORS (origen permitido/no autorizado) — 10 tests en verde
 - **Dependencias**: ninguna
 - **Governance**: BAJO
 - **Leer antes**:
