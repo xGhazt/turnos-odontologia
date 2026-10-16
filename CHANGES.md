@@ -104,7 +104,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 ## FASE 0 — Cimientos e Infraestructura
 
 ### [C-01] `foundation-setup`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-10-16)
 - **Scope**: Scaffolding completo del monorepo e infraestructura base con Docker Compose
   - Estructura de directorios: `backend/`, `frontend/`, `docs/`, `knowledge-base/`
   - `backend/`: aplicación base FastAPI con endpoint `/api/health`, Pydantic Settings para `.env`, logging estructurado, configuración CORS para Vite y setup inicial de Alembic

@@ -4,6 +4,7 @@ _personal/
 # Secretos y entorno
 .env
 .env.*
+!.env.example
 *.key
 *.pem
 
@@ -11,3 +12,11 @@ _personal/
 node_modules/
 dist/
 build/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
