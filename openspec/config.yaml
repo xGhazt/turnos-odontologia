@@ -1,13 +1,17 @@
 schema: spec-driven
 
-# Project context (optional)
-# This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+# Project context (shown to AI when creating artifacts)
+context: |
+  Proyecto: turnos-odontologia — sistema de gestión de turnos y agenda para consultorios odontológicos (Argentina).
+  Idioma: español rioplatense (voseo) en documentación y especificaciones.
+  Stack Frontend: React + TypeScript + Vite + Tailwind CSS.
+  Stack Backend: Python + FastAPI; autenticación con JWT; ORM SQLAlchemy; migraciones con Alembic.
+  Persistencia: PostgreSQL. Asincronía / colas: Redis.
+  Infraestructura: Docker y Docker Compose (backend, frontend, PostgreSQL, Redis).
+  Integraciones externas: WhatsApp Business API (recordatorios), Mercado Pago (señas).
+  Dominio: salud / odontología. Modelo multi-profesional y multi-sillón.
+  Reglas duras: prohibido usar datos reales de personas (datos 100% ficticios); sin credenciales en el repo.
+  Especificaciones en formato dado/cuando/entonces; mínimo 3 escenarios por change.
 
 # Per-artifact rules (optional)
 # Add custom rules for specific artifacts.

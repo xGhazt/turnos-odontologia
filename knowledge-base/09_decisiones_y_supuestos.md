@@ -2,12 +2,17 @@
 
 ## Decisiones de Arquitectura (Confirmadas)
 1. **Separación de Frontend y Backend:** API REST desacoplada con React en el cliente para permitir futura escalabilidad hacia aplicación móvil.
-2. **PostgreSQL como Base de Datos:** Elegida por su robustez en transacciones relacionales complejas y control de concurrencia en reservas de agenda (race conditions).
-3. **Uso de OpenSpec y Active Stack:** Metodología estricta de desarrollo guiado por especificaciones y control de etapas.
+2. **Stack Frontend:** React con TypeScript y Vite (bundler) + Tailwind CSS.
+3. **Stack Backend:** Python con FastAPI (API REST sobre ASGI).
+4. **Autenticación:** JWT (JSON Web Tokens) con expiración y roles.
+5. **ORM / Migraciones:** SQLAlchemy para el mapeo objeto-relacional, con Alembic para migraciones.
+6. **PostgreSQL como Base de Datos:** Elegida por su robustez en transacciones relacionales complejas y control de concurrencia en reservas de agenda (race conditions).
+7. **Redis para Asincronía:** Cola de tareas / procesamiento en segundo plano para recordatorios y webhooks de pago.
+8. **Infraestructura:** Docker y Docker Compose para orquestar backend, frontend, PostgreSQL y Redis.
+9. **Uso de OpenSpec y Active Stack:** Metodología estricta de desarrollo guiado por especificaciones y control de etapas.
 
 ## Decisiones Técnicas Pendientes de Confirmación (No definidas en `openspec/config.yaml`)
-- **Stack Backend:** Node.js/Express vs Python/FastAPI — *pendiente de definición por el equipo; no hay decisión vinculante en configuración*.
-- **Proveedor WhatsApp:** API oficial de Meta (costos por conversación) vs proveedores terceros (Twilio, Wati, etc.) — *impacta en costos operativos y estabilidad; ver PA-04*.
+- **Proveedor WhatsApp:** API oficial de Meta (costos por conversación) vs proveedores terceros (Twilio, Wati, etc.) — *impacta en costos operativos y estabilidad; ver PA-05*.
 
 ## Supuestos de Negocio
 - **Suposición 1:** Los pacientes cuentan con acceso a WhatsApp y medios de pago digitales (Mercado Pago / Tarjeta) para abonar las señas.

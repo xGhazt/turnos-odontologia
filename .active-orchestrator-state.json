@@ -10,7 +10,7 @@
       "system_type": "web_app",
       "domain": "healthcare",
       "scale": "public_multi_user",
-      "stack": "React + Node.js / FastAPI + PostgreSQL",
+      "stack": "React + TypeScript + Vite + Tailwind / FastAPI (Python) + SQLAlchemy + JWT / PostgreSQL + Redis / Docker + Docker Compose",
       "needs_infra": true
     },
     "files": [
