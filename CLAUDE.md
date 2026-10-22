@@ -31,9 +31,9 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 | [06_funcionalidades.md](knowledge-base/06_funcionalidades.md) | Historias de usuario por épica |
 | [07_flujos_principales.md](knowledge-base/07_flujos_principales.md) | Flujos E2E |
 | [08_arquitectura_propuesta.md](knowledge-base/08_arquitectura_propuesta.md) | Patrones, estructura, env vars |
-| [10_preguntas_abiertas.md](knowledge-base/10_preguntas_abiertas.md) | ⚠️ Inconsistencias a resolver ANTES de codear |
+| [10_preguntas_abiertas.md](knowledge-base/10_preguntas_abiertas.md) | Preguntas abiertas y discrepancias; revisá las PA que afectan al change que vas a implementar |
 
-> ⚠️ Resolver las preguntas de prioridad **Alta** de `10_preguntas_abiertas.md` antes de arrancar el primer change.
+> Antes de implementar un change, revisá en CHANGES.md su sección "Leer antes". PA-01 → C-05; PA-02/03 → C-08; PA-05 → C-09; PA-07 → C-13. PA-04 está resuelta y C-01 ya está archivado. PA-06 es una corrección documental del Discovery, no un bloqueante de código.
 
 ---
 
@@ -41,12 +41,14 @@ La fuente de verdad del dominio vive en `knowledge-base/`. **Leé el archivo rel
 
 | Agente | Rol | Skills que carga |
 |--------|-----|------------------|
-| **Backend Core** | FastAPI / SQLAlchemy / UoW / migraciones | `fastapi`, `async-python-patterns`, `python-testing-patterns` |
-| **Backend Aux** | Servicios, integraciones, seguridad | `api-security-best-practices`, `postgresql-optimization` |
-| **Frontend** | React / TypeScript / Vite / Tailwind | `vercel-react-best-practices`, `typescript-advanced-types` |
-| **Orquestación** | SDD / OPSX / docs | `kb-creator`, `roadmap-generator`, `find-skill`, `skill-registry` |
+| **Backend Core** | FastAPI / SQLAlchemy / UoW / migraciones | `fastapi`, `async-python-patterns` |
+| **Backend Aux** | Servicios, integraciones, seguridad | `fastapi`, `async-python-patterns` (base) |
+| **Frontend** | React / TypeScript / Vite / Tailwind | `vercel-react-best-practices` |
+| **Orquestación** | SDD / OPSX / docs | `active-orchestrator`, `discovery-research`, `kb-creator`, `roadmap-generator`, `find-skill`, `skill-registry`, `agent-instruction` |
 
 Cargá la skill correspondiente al contexto ANTES de escribir código.
+
+> Skills instaladas actualmente: esas 10. `python-testing-patterns`, `api-security-best-practices`, `postgresql-optimization` y `typescript-advanced-types` son previstas y se incorporarán cuando el change que las necesite las requiera.
 
 ---
 
