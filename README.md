@@ -33,9 +33,9 @@ docker compose up --build
 cd backend
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env   # Usa SQLite in-memory automáticamente en tests
 pytest -v
 ```
+> No hace falta crear un `.env` para los tests: `tests/conftest.py` define las variables por defecto y usa **SQLite in-memory**.
 > **10 tests automatizados** cubren: liveness, readiness (OK / degraded), settings fail-fast y CORS.
 
 ---
