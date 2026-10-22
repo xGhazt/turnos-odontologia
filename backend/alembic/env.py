@@ -17,7 +17,22 @@ from app.models.base import Base  # noqa: E402
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().database_url)
+def get_database_url() -> str:
+    """Obtiene URL de BD para migraciones: prioriza env var, luego settings, luego default seguro."""
+    url = os.environ.get("DATABASE_URL")
+    if url:
+        return url
+    try:
+        from app.core.settings import get_settings
+        settings = get_settings()
+        if settings.database_url:
+            return str(settings.database_url)
+    except Exception:
+        pass
+    return "sqlite+aiosqlite:///:memory:"
+
+
+config.set_main_option("sqlalchemy.url", get_database_url())
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
