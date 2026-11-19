@@ -143,7 +143,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 ## FASE 1 — Autenticación y Shell de Frontend
 
 ### [C-03] `auth-system`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-11-19)
 - **Scope**: Sistema completo de autenticación JWT y control de acceso basado en roles (RBAC)
   - Endpoints REST en `app/api/v1/auth.py`:
     - `POST /api/v1/auth/login` (login con email y contraseña, hash bcrypt/passlib, rate limiting)
@@ -160,6 +160,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
   - `knowledge-base/04_modelo_de_datos.md` §Usuario
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad y Variables de Entorno
   - `knowledge-base/09_decisiones_y_supuestos.md` §Decisiones de Arquitectura (JWT)
+- **Info de archivado**: Change archivado en `openspec/changes/archive/2026-11-19-c-03-auth/`. Suite de tests: 58 passed. 4 tareas documentadas como pendientes (documentación .env.example y verificaciones varias).
 
 ---
 

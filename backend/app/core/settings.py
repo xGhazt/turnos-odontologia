@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     database_url: str
     redis_url: str
     cors_origins: Annotated[list[str], NoDecode] = ["http://localhost:5173"]
+    secret_key: str
+    algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
 
     @field_validator("cors_origins", mode="before")
     @classmethod
@@ -34,6 +37,26 @@ class Settings(BaseSettings):
         if isinstance(value, str):
             return [origin.strip() for origin in value.split(",") if origin.strip()]
         return value
+
+    @field_validator("secret_key", mode="before")
+    @classmethod
+    def _validate_secret_key(cls, value: object) -> str:
+        if not value or not isinstance(value, str) or value.strip() == "":
+            raise ValueError("SECRET_KEY is required and must not be empty")
+        if len(value.strip()) < 32:
+            raise ValueError("SECRET_KEY must have at least 32 characters")
+        return value
+
+    @field_validator("access_token_expire_minutes", mode="before")
+    @classmethod
+    def _validate_access_token_expire_minutes(cls, value: object) -> int:
+        try:
+            minutes = int(value)
+        except (ValueError, TypeError):
+            raise ValueError("ACCESS_TOKEN_EXPIRE_MINUTES must be a positive integer")
+        if minutes <= 0:
+            raise ValueError("ACCESS_TOKEN_EXPIRE_MINUTES must be a positive integer")
+        return minutes
 
 
 @lru_cache

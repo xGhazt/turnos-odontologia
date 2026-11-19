@@ -8,6 +8,10 @@ from app.models.base import Base
 
 os.environ.setdefault("DATABASE_URL", "sqlite+aiosqlite:///:memory:")
 os.environ.setdefault("REDIS_URL", "redis://localhost:6379/0")
+os.environ.setdefault(
+    "SECRET_KEY",
+    "test-only-secret-key-for-jwt-tests-32-bytes"
+)
 os.environ.setdefault("CORS_ORIGINS", "http://localhost:5173")
 
 from httpx import ASGITransport, AsyncClient  # noqa: E402
