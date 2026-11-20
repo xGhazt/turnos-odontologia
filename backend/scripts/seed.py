@@ -14,10 +14,11 @@ from app.models.Chair import Chair
 from app.models.Professional import Professional
 from app.models.User import Role, User
 
-# Hashes simulados bcrypt (formato $2b$...) - 100% ficticios según RN-06
+# Hashes bcrypt reales de contraseñas 100% ficticias de desarrollo (RN-06).
+# "password123" -> usuario odontólogo; "admin123" -> usuario admin.
 SIMULATED_HASHES = {
-    "password123": "$2b$12$CfGKXvIhQeM0l.lxSMy1juuM6vywT6.k5qCvNQ.OGZoTjQJqj2WuC",
-    "admin123": "$2a$12$LnGmO6F5xYwFbEH2lXyK/uKJiSggdTJJZ8T.zx.Y.L5YkOQ.kS6Cu",
+    "password123": "$2b$12$.Xx4bMvw7gp3kkWq1Lqn3uX4HnAnjN/R6m4le4sXe5iUgg/BfjsN2",
+    "admin123": "$2b$12$Ipcvf0jrOYNKdyxKdSNC6uRU/neicQmVh6Sra2D0xkeRDfVJ4CU6e",
 }
 
 

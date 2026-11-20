@@ -233,3 +233,56 @@ class TestSoftDelete:
         assert db_session.query(User).filter_by(id=user_id).first() is not None
         # Verificar que no está activo
         assert db_session.query(User).filter_by(id=user_id).first().is_active == False
+
+
+class TestPatientModel:
+    """Tests para el modelo Patient."""
+
+    def test_patient_creation_sets_audit_timestamps(self, db_session):
+        """Test: crear paciente establece created_at, updated_at e is_active=True."""
+        from app.models.Patient import Patient
+        from tests.factories import make_patient_data
+
+        patient = Patient(**make_patient_data())
+        db_session.add(patient)
+        db_session.flush()
+
+        assert patient.id is not None
+        assert patient.created_at is not None
+        assert patient.updated_at is not None
+        assert patient.is_active is True
+        assert patient.deleted_at is None
+
+    def test_patient_soft_delete_marks_inactive(self, db_session):
+        """Test: soft delete marca is_active=False y preserva el registro."""
+        from datetime import datetime, timezone
+        from app.models.Patient import Patient
+        from tests.factories import make_patient_data
+
+        patient = Patient(**make_patient_data(dni="22334455"))
+        db_session.add(patient)
+        db_session.flush()
+
+        patient.is_active = False
+        patient.deleted_at = datetime.now(timezone.utc).replace(tzinfo=None)
+        db_session.flush()
+
+        persisted = db_session.query(Patient).filter_by(id=patient.id).first()
+        assert persisted is not None
+        assert persisted.is_active is False
+        assert persisted.deleted_at is not None
+
+    def test_patient_dni_unique_constraint(self, db_session):
+        """Test: DNI duplicado viola restricción de unicidad en BD (RN-04)."""
+        from sqlalchemy.exc import IntegrityError
+        from app.models.Patient import Patient
+        from tests.factories import make_patient_data
+
+        p1 = Patient(**make_patient_data(dni="33445566"))
+        db_session.add(p1)
+        db_session.flush()
+
+        p2 = Patient(**make_patient_data(dni="33445566", email="otro@fake.com"))
+        db_session.add(p2)
+        with pytest.raises(IntegrityError):
+            db_session.flush()

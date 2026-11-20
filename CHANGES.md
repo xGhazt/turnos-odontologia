@@ -122,7 +122,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 ---
 
 ### [C-02] `core-models`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-11-18)
 - **Scope**: Modelos base de SQLAlchemy, mixins transversales, repositorios genéricos y seed mínimo
   - Modelos SQLAlchemy: `Base`, `AuditMixin` (`created_at`, `updated_at`, `is_active`, `deleted_at`)
   - Entidades base: `User`, `Role`, `Professional` (matrícula, especialidad), `Chair` (box/sillón de atención)
@@ -165,7 +165,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 ---
 
 ### [C-04] `frontend-shell-auth`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-11-19)
 - **Scope**: Shell de la aplicación React con enrutador, layouts y autenticación integrada
   - Enrutamiento con React Router v6: `PublicLayout`, `AuthLayout` y `DashboardLayout` con barra lateral y menú adaptativo según rol del usuario
   - Estado global de autenticación (`AuthContext` o store liviano): manejo de login, logout, persistencia en sesión y redirección automática tras expiración
@@ -185,7 +185,7 @@ Paso │ Agente A (Backend Core)          │ Agente B (Backend Aux)          �
 ## FASE 2 — Gestión Base (Pacientes, Profesionales y Horarios)
 
 ### [C-05] `patients-management`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completado (2026-11-19)
 - **Scope**: Modelo y API REST para gestión integral del padrón de pacientes
   - Modelo SQLAlchemy `Patient`: nombres, apellidos, DNI, teléfono, email, fecha de nacimiento, obra social/prepaga, número de afiliado, antecedentes médicos
   - Validación de negocio estricta: DNI único e irrepetible en el sistema (**RN-04**)

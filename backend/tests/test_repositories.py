@@ -37,7 +37,8 @@ async def async_engine():
 @pytest.fixture(scope="function")
 async def session(async_engine):
     """Sesión function-scoped con rollback por test: aislamiento total."""
-    async with async_engine.begin() as conn:
+    async with async_engine.connect() as conn:
+        trans = await conn.begin()
         async_session_maker = sessionmaker(
             bind=conn, class_=AsyncSession, expire_on_commit=False
         )
@@ -56,6 +57,7 @@ async def session(async_engine):
                 session.add(existing_user)
                 await session.flush()
             yield session
+        await trans.rollback()
 
 
 class TestBaseRepository:
@@ -279,3 +281,142 @@ class TestChairRepository:
         # y luego verificar que el check funciona
         is_avail = await repo.check_name_available("AvailableCheck")
         assert isinstance(is_avail, bool)
+
+
+class TestPatientRepository:
+    """Tests para PatientRepository."""
+
+    async def test_create_patient(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        patient = await repo.create(**make_patient_data(dni="11111111"))
+        assert patient.id is not None
+        assert patient.dni == "11111111"
+        assert patient.is_active is True
+
+    async def test_get_by_dni_existing(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        await repo.create(**make_patient_data(dni="22222222"))
+        found = await repo.get_by_dni("22222222")
+        assert found is not None
+        assert found.dni == "22222222"
+
+    async def test_get_by_dni_not_found(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+
+        repo = PatientRepository(session)
+        found = await repo.get_by_dni("99999999")
+        assert found is None
+
+    async def test_search_pagination(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        for i in range(5):
+            await repo.create(
+                **make_patient_data(
+                    dni=f"3000000{i}",
+                    first_name=f"Nombre{i}",
+                    last_name=f"Apellido{i}",
+                    email=f"p{i}@fake.com",
+                )
+            )
+
+        items, total = await repo.search(page=1, size=2)
+        assert total == 5
+        assert len(items) == 2
+
+        items_p3, total_p3 = await repo.search(page=3, size=2)
+        assert total_p3 == 5
+        assert len(items_p3) == 1
+
+    async def test_search_by_dni_partial(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        await repo.create(**make_patient_data(dni="12345678", email="a@fake.com"))
+        await repo.create(**make_patient_data(dni="87654321", email="b@fake.com"))
+
+        items, total = await repo.search(query="12345")
+        assert total == 1
+        assert items[0].dni == "12345678"
+
+    async def test_search_by_last_name_partial(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        await repo.create(**make_patient_data(dni="40000001", last_name="García", email="g@fake.com"))
+        await repo.create(**make_patient_data(dni="40000002", last_name="López", email="l@fake.com"))
+
+        items, total = await repo.search(query="garc")
+        assert total == 1
+        assert items[0].last_name == "García"
+
+    async def test_search_by_first_name_partial(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        await repo.create(**make_patient_data(dni="50000001", first_name="Juan Carlos", email="j@fake.com"))
+        await repo.create(**make_patient_data(dni="50000002", first_name="María", email="m@fake.com"))
+
+        items, total = await repo.search(query="juan")
+        assert total == 1
+        assert items[0].first_name == "Juan Carlos"
+
+    async def test_search_empty_page_out_of_range(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        await repo.create(**make_patient_data(dni="60000001"))
+
+        items, total = await repo.search(page=99, size=20)
+        assert total == 1
+        assert items == []
+
+    async def test_update_patient_contact(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        patient = await repo.create(**make_patient_data(dni="70000001"))
+        updated = await repo.update(patient.id, phone="+54 11 5555-9999", email="nuevo@fake.com")
+        assert updated is not None
+        assert updated.phone == "+54 11 5555-9999"
+        assert updated.email == "nuevo@fake.com"
+
+    async def test_update_patient_insurance(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        patient = await repo.create(**make_patient_data(dni="70000002"))
+        updated = await repo.update(
+            patient.id,
+            insurance_provider="Swiss Medical",
+            insurance_number="SM-12345",
+        )
+        assert updated is not None
+        assert updated.insurance_provider == "Swiss Medical"
+        assert updated.insurance_number == "SM-12345"
+
+    async def test_soft_delete_patient(self, session: AsyncSession):
+        from app.repositories.Patient import PatientRepository
+        from tests.factories import make_patient_data
+
+        repo = PatientRepository(session)
+        patient = await repo.create(**make_patient_data(dni="80000001"))
+        await repo.soft_delete(patient.id)
+
+        items, total = await repo.search()
+        assert total == 0
+        assert items == []

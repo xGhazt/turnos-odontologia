@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from app.models.User import User, Role
 from app.repositories.base import BaseRepository
@@ -14,8 +15,10 @@ class UserRepository(BaseRepository[User]):
         super().__init__(User, session)
 
     async def get_by_email(self, email: str) -> Optional[User]:
-        """Obtener usuario por email (único)."""
-        return await self.get_by(email=email)
+        """Obtener usuario por email (único) cargando la relación role."""
+        stmt = select(User).options(joinedload(User.role)).where(User.email == email)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
 
     async def get_by_role(self, role_name: str) -> Optional[Role]:
         """Obtener rol por nombre."""
