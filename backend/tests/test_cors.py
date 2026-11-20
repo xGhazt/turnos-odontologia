@@ -10,6 +10,7 @@ async def test_cors_preflight_from_allowed_origin(client):
         },
     )
     assert response.headers.get("access-control-allow-origin") == ALLOWED_ORIGIN
+    assert response.headers.get("access-control-allow-credentials") == "true"
 
 
 async def test_cors_preflight_from_disallowed_origin(client):
